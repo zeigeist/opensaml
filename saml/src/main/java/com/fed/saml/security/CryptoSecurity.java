@@ -41,10 +41,11 @@ import sun.security.x509.X509CertImpl;
 import sun.security.x509.X509CertInfo;
 
 public class CryptoSecurity {
-	public static final String ARTIFACT_LOCATION = "/tmp/saml";
-	public static final String KEY_PAIR_LOCATION = ARTIFACT_LOCATION + "/keypair.key";
-	public static final String PUBLIC_KEY_LOCATION = ARTIFACT_LOCATION + "/public.key";
-	public static final String PRIVATE_KEY_LOCATION = ARTIFACT_LOCATION + "/private.key";	
+	private static final String ASYMMETRIC_ALGO = "RSA";
+	private static final String ARTIFACT_LOCATION = "/tmp/saml";
+	private static final String KEY_PAIR_LOCATION = ARTIFACT_LOCATION + "/keypair.key";
+	private static final String PUBLIC_KEY_LOCATION = ARTIFACT_LOCATION + "/public.key";
+	private static final String PRIVATE_KEY_LOCATION = ARTIFACT_LOCATION + "/private.key";	
 
 	public static KeyPair generateKeyPair() {
 		new File(ARTIFACT_LOCATION).mkdir();
@@ -59,8 +60,8 @@ public class CryptoSecurity {
 		KeyPairGenerator keyGen = null;
 		KeyFactory keyFactory = null;
 		try {
-			keyGen = KeyPairGenerator.getInstance("RSA");
-			keyFactory = KeyFactory.getInstance("RSA");
+			keyGen = KeyPairGenerator.getInstance(ASYMMETRIC_ALGO);
+			keyFactory = KeyFactory.getInstance(ASYMMETRIC_ALGO);
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
@@ -156,7 +157,7 @@ public class CryptoSecurity {
 	        BigInteger m = (BigInteger) oin.readObject();
 	        BigInteger e = (BigInteger) oin.readObject();
 	        RSAPublicKeySpec keySpec = new RSAPublicKeySpec(m, e);
-	        KeyFactory fact = KeyFactory.getInstance("RSA");
+	        KeyFactory fact = KeyFactory.getInstance(ASYMMETRIC_ALGO);
 	        key = fact.generatePublic(keySpec);
 	    } catch (IOException | InvalidKeySpecException | NoSuchAlgorithmException | ClassNotFoundException e) {
 	    	e.printStackTrace();
