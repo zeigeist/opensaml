@@ -12,7 +12,7 @@ public class MetadataServlet extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String message;
+	private String metadata;
 
 	public void init() throws ServletException {
 		// Do required initialization
@@ -21,12 +21,12 @@ public class MetadataServlet extends HttpServlet {
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		message = new MetadataGenerator().generateMetadata();
+		metadata = new MetadataGenerator().generateMetadata();
 		// Set response content type
 		response.setContentType("text/xml");
 		// Actual logic goes here.
 		PrintWriter out = response.getWriter();
-		out.println(message);
+		out.println(metadata);
 	}
 
 	public void destroy() {
