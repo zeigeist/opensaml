@@ -1,20 +1,73 @@
-<?xml version="1.0" encoding="utf-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xmlns="http://java.sun.com/xml/ns/javaee"
-xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
-http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
-  <display-name>SAML2.0 Implementation</display-name>
-  <servlet>
-	<servlet-name>metadata</servlet-name>
-    <servlet-class>com.fed.saml.trust.metadata.handler.MetadataServlet</servlet-class>
-	<load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-	<servlet-name>metadata</servlet-name>
-	<url-pattern>/trust/metadata</url-pattern>
-  </servlet-mapping>
-  	<welcome-file-list>
+<!DOCTYPE web-app PUBLIC
+        "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+        "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+    <display-name>SAML Implementation Using OpenSAML</display-name>
+
+    <servlet>
+	    <servlet-name>Metadata</servlet-name>
+        <servlet-class>com.fed.saml.trust.metadata.handler.MetadataService</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>IdPSSOService</servlet-name>
+        <servlet-class>com.fed.saml.protocol.idp.IdPSSOService</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>IdPArtifactResolutionService</servlet-name>
+        <servlet-class>com.fed.saml.protocol.idp.IdPArtifactResolutionService</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SPAssertionConsumerService</servlet-name>
+        <servlet-class>com.fed.saml.protocol.sp.SPAssertionConsumerService</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TestSPService</servlet-name>
+        <servlet-class>com.fed.saml.testsp.TestSPService</servlet-class>
+    </servlet>
+	<servlet>
+    	<servlet-name>LoginService</servlet-name>
+    	<servlet-class>com.fed.saml.web.LoginService</servlet-class>
+   	</servlet>
+   
+	<servlet-mapping>
+	    <servlet-name>Metadata</servlet-name>
+	    <url-pattern>/trust/metadata</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>IdPSSOService</servlet-name>
+        <url-pattern>/idp/sso</url-pattern>
+    </servlet-mapping>
+	<servlet-mapping>
+        <servlet-name>IdPArtifactResolutionService</servlet-name>
+        <url-pattern>/idp/artifactresolution</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SPAssertionConsumerService</servlet-name>
+        <url-pattern>/sp/assertionconsumer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TestSPService</servlet-name>
+        <url-pattern>/testsp</url-pattern>
+    </servlet-mapping>
+   	<servlet-mapping>
+    	<servlet-name>LoginService</servlet-name>
+    	<url-pattern>/web/login</url-pattern>
+    </servlet-mapping>
+    
+
+    <filter>
+        <filter-name>SPAccessFilter</filter-name>
+        <filter-class>com.fed.saml.protocol.sp.SPAccessFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>SPAccessFilter</filter-name>
+        <url-pattern>/testsp</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+    
+    <welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
 </web-app>
