@@ -250,7 +250,7 @@ public class IdPArtifactResolutionService extends HttpServlet {
         encryptionParameters.setAlgorithm(EncryptionConstants.ALGO_ID_BLOCKCIPHER_AES128);
 
         KeyEncryptionParameters keyEncryptionParameters = new KeyEncryptionParameters();
-        keyEncryptionParameters.setEncryptionCredential(SPCredentials.getCredential());
+        keyEncryptionParameters.setEncryptionCredential(SPCredentials.getSPCredential(""));
         keyEncryptionParameters.setAlgorithm(EncryptionConstants.ALGO_ID_KEYTRANSPORT_RSAOAEP);
 
         Encrypter encrypter = new Encrypter(encryptionParameters, keyEncryptionParameters);

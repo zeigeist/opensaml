@@ -43,15 +43,11 @@ import org.opensaml.xml.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fed.saml.protocol.idp.IdPCredentials;
 import com.fed.saml.protocol.utils.OpenSAMLUtils;
 
-/**
- * Created by Privat on 4/6/14.
- */
 public class SPAssertionConsumerService extends HttpServlet {
     private static Logger logger = LoggerFactory.getLogger(SPAssertionConsumerService.class);
-
+    
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
         logger.info("Artifact received from IdPSSOService");
@@ -80,6 +76,7 @@ public class SPAssertionConsumerService extends HttpServlet {
 	        if(StatusCode.SUCCESS_URI.equals(statusCode.getValue())) {
 	        	List<EncryptedAssertion> encryptedAssertionList= response.getEncryptedAssertions();
 			    if (!encryptedAssertionList.isEmpty()) {
+			    	
 			    	// decrypt and check integrity of ArtifactResponse 
 			        EncryptedAssertion encryptedAssertion = getEncryptedAssertion(artifactResponse);
 			        Assertion assertion = decryptAssertion(encryptedAssertion);
@@ -87,26 +84,31 @@ public class SPAssertionConsumerService extends HttpServlet {
 			        logger.info("Decrypted Assertion: ");
 			        OpenSAMLUtils.logSAMLObject(assertion);
 			
+			        // print saml message attributes
 			        logAssertionAttributes(assertion);
 			        logAuthenticationInstant(assertion);
 			        logAuthenticationMethod(assertion);
-			
-			        setAuthenticatedSession(req);
-			        redirectToGotoURL(req, resp);
+
+			        // prepare to redirect to requested resource
+			        setAuthenticatedFlagInSession(req);
+			        redirectToRequestedResource(req, resp);
 			    } else {
 			    	List<Assertion> assertionList = response.getAssertions(); 
 			    	if (!assertionList.isEmpty()) {
-				    	// decrypt and check integrity of ArtifactResponse 
+				    	
+			    		// decrypt and check integrity of ArtifactResponse 
 				        verifyAssertionSignature(assertionList.get(0));
 				        logger.info("Decrypted Assertion: ");
 				        OpenSAMLUtils.logSAMLObject(assertionList.get(0));
 				
+				        // print saml message attributes
 				        logAssertionAttributes(assertionList.get(0));
 				        logAuthenticationInstant(assertionList.get(0));
 				        logAuthenticationMethod(assertionList.get(0));
 				
-				        setAuthenticatedSession(req);
-				        redirectToGotoURL(req, resp);
+				        // prepare to redirect to requested resource
+				        setAuthenticatedFlagInSession(req);
+				        redirectToRequestedResource(req, resp);
 				    }
 			    }
 	        } else {
@@ -120,7 +122,7 @@ public class SPAssertionConsumerService extends HttpServlet {
     }
 
     private Assertion decryptAssertion(EncryptedAssertion encryptedAssertion) {
-        StaticKeyInfoCredentialResolver keyInfoCredentialResolver = new StaticKeyInfoCredentialResolver(SPCredentials.getCredential());
+        StaticKeyInfoCredentialResolver keyInfoCredentialResolver = new StaticKeyInfoCredentialResolver(SPCredentials.getSPCredential(SPConstants.SP_KEY_ALIAS));
 
         Decrypter decrypter = new Decrypter(null, keyInfoCredentialResolver, new InlineEncryptedKeyResolver());
         decrypter.setRootInNewDocument(true);
@@ -141,12 +143,14 @@ public class SPAssertionConsumerService extends HttpServlet {
             SAMLSignatureProfileValidator profileValidator = new SAMLSignatureProfileValidator();
             profileValidator.validate(assertion.getSignature());
 
-            SignatureValidator sigValidator = new SignatureValidator(IdPCredentials.getCredential());
+            SignatureValidator sigValidator = new SignatureValidator(SPCredentials.getIdPCredential(SPConstants.IDP_KEY_ALIAS));
 
             sigValidator.validate(assertion.getSignature());
 
             logger.info("SAML Assertion signature verified");
         } catch (ValidationException e) {
+        	e.printStackTrace();
+        	logger.error(e.getMessage());
             throw new RuntimeException(e);
         }
 
@@ -154,7 +158,7 @@ public class SPAssertionConsumerService extends HttpServlet {
 
     private void signArtifactResolve(ArtifactResolve artifactResolve) {
         Signature signature = OpenSAMLUtils.buildSAMLObject(Signature.class);
-        signature.setSigningCredential(SPCredentials.getCredential());
+        signature.setSigningCredential(SPCredentials.getSPCredential(SPConstants.SP_KEY_ALIAS));
         signature.setSignatureAlgorithm(SignatureConstants.ALGO_ID_SIGNATURE_RSA_SHA1);
         signature.setCanonicalizationAlgorithm(SignatureConstants.ALGO_ID_C14N_EXCL_OMIT_COMMENTS);
 
@@ -173,15 +177,15 @@ public class SPAssertionConsumerService extends HttpServlet {
         }
     }
 
-    private void setAuthenticatedSession(HttpServletRequest req) {
+    private void setAuthenticatedFlagInSession(HttpServletRequest req) {
         req.getSession().setAttribute(SPConstants.AUTHENTICATED_SESSION_ATTRIBUTE, true);
     }
 
-    private void redirectToGotoURL(HttpServletRequest req, HttpServletResponse resp) {
-        String gotoURL = (String)req.getSession().getAttribute(SPConstants.GOTO_URL_SESSION_ATTRIBUTE);
-        logger.info("Redirecting to requested URL: " + gotoURL);
+    private void redirectToRequestedResource(HttpServletRequest req, HttpServletResponse resp) {
+        String requestedResource = (String)req.getSession().getAttribute(SPConstants.REQUESTED_RESOURCE_SESSION_ATTRIBUTE);
+        logger.info("Redirecting to requested resource: " + requestedResource);
         try {
-            resp.sendRedirect(gotoURL);
+            resp.sendRedirect(requestedResource);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -197,12 +201,16 @@ public class SPAssertionConsumerService extends HttpServlet {
     }
 
     private void logAssertionAttributes(Assertion assertion) {
-        for (Attribute attribute : assertion.getAttributeStatements().get(0).getAttributes()) {
-            logger.info("Attribute name: " + attribute.getName());
-            for (XMLObject attributeValue : attribute.getAttributeValues()) {
-                logger.info("Attribute value: " + ((XSString) attributeValue).getValue());
-            }
-        }
+    	if(assertion.getAttributeStatements().size() > 0) {
+    		for (Attribute attribute : assertion.getAttributeStatements().get(0).getAttributes()) {
+    				logger.info("Attribute name: " + attribute.getName());
+    			for (XMLObject attributeValue : attribute.getAttributeValues()) {
+    				logger.info("Attribute value: " + ((XSString) attributeValue).getValue());
+    			}
+    		}
+    	} else {
+    		logger.info("No Attributes from received Assertion");
+    	}
     }
 
     private EncryptedAssertion getEncryptedAssertion(ArtifactResponse artifactResponse) {

@@ -18,6 +18,10 @@
         <servlet-class>com.fed.saml.protocol.idp.IdPArtifactResolutionService</servlet-class>
     </servlet>
     <servlet>
+	    <servlet-name>SPAuthnRequestService</servlet-name>
+        <servlet-class>com.fed.saml.protocol.sp.SPAuthnRequestService</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>SPAssertionConsumerService</servlet-name>
         <servlet-class>com.fed.saml.protocol.sp.SPAssertionConsumerService</servlet-class>
     </servlet>
@@ -29,6 +33,7 @@
     	<servlet-name>LoginService</servlet-name>
     	<servlet-class>com.fed.saml.web.LoginService</servlet-class>
    	</servlet>
+   	
    
 	<servlet-mapping>
 	    <servlet-name>Metadata</servlet-name>
@@ -41,6 +46,10 @@
 	<servlet-mapping>
         <servlet-name>IdPArtifactResolutionService</servlet-name>
         <url-pattern>/idp/artifactresolution</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SPAuthnRequestService</servlet-name>
+        <url-pattern>/sp/authnrequestservice</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>SPAssertionConsumerService</servlet-name>

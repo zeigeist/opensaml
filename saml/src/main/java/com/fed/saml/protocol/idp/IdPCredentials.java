@@ -31,7 +31,8 @@ public class IdPCredentials {
     private static Credential generateCredential() {
         try {
             KeyPair keyPair = SecurityHelper.generateKeyPair("RSA", 1024, null);
-            return SecurityHelper.getSimpleCredential(keyPair.getPublic(), keyPair.getPrivate());
+            //return SecurityHelper.getSimpleCredential(keyPair.getPublic(), keyPair.getPrivate());
+            return SecurityHelper.getSimpleCredential(keyPair.getPublic(), null);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         } catch (NoSuchProviderException e) {

@@ -41,7 +41,7 @@ public class MetadataGenerator2 {
 	    
      private static final String REDIRECT_BINDING_FQDN = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect";
      
-     private static final String POST_BINDING_FQDN = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST";
+     private static final String POST_BINDING_FQDN = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact";
      
      private static final String PROTOCOL_SUPPORT_ENUMERATION = "urn:oasis:names:tc:SAML:2.0:protocol urn:oasis:names:tc:SAML:1.1:protocol";
      

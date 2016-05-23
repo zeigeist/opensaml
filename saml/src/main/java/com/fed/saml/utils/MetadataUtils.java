@@ -12,8 +12,8 @@ public class MetadataUtils {
 		return Integer.toString(random.nextInt(1000));
 	}
 	
-	public static final String getValidUntilDate() {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");			
+	public static final String getValidUntilDate() { 
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");			
 		Calendar calendar = new GregorianCalendar();	
 		calendar.add(Calendar.YEAR, 10);
 		return sdf.format(calendar.getTime()).toString();
