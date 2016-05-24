@@ -6,16 +6,16 @@
     <display-name>SAML-SP Implementation Using OpenSAML</display-name>
 
     <servlet>
-	    <servlet-name>Metadata</servlet-name>
+	    <servlet-name>MetadataService</servlet-name>
         <servlet-class>com.fed.saml.trust.metadata.handler.MetadataService</servlet-class>
     </servlet>
     <servlet>
-	    <servlet-name>SPAuthnRequestService</servlet-name>
-        <servlet-class>com.fed.saml.protocol.sp.SPAuthnRequestService</servlet-class>
+	    <servlet-name>AuthnRequestService</servlet-name>
+        <servlet-class>com.fed.saml.protocol.sp.services.AuthnRequestService</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>SPAssertionConsumerService</servlet-name>
-        <servlet-class>com.fed.saml.protocol.sp.SPAssertionConsumerService</servlet-class>
+        <servlet-name>AssertionConsumerService</servlet-name>
+        <servlet-class>com.fed.saml.protocol.sp.services.AssertionConsumerService</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>TestSPService</servlet-name>
@@ -23,15 +23,15 @@
     </servlet>
    	
 	<servlet-mapping>
-	    <servlet-name>Metadata</servlet-name>
+	    <servlet-name>MetadataService</servlet-name>
 	    <url-pattern>/trust/metadata</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>SPAuthnRequestService</servlet-name>
+        <servlet-name>AuthnRequestService</servlet-name>
         <url-pattern>/sp/authnrequestservice</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>SPAssertionConsumerService</servlet-name>
+        <servlet-name>AssertionConsumerService</servlet-name>
         <url-pattern>/sp/assertionconsumer</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
@@ -40,12 +40,12 @@
     </servlet-mapping>
 
     <filter>
-        <filter-name>SPAccessFilter</filter-name>
-        <filter-class>com.fed.saml.protocol.sp.SPAccessFilter</filter-class>
+        <filter-name>AccessFilterService</filter-name>
+        <filter-class>com.fed.saml.protocol.sp.services.AccessFilterService</filter-class>
     </filter>
 
     <filter-mapping>
-        <filter-name>SPAccessFilter</filter-name>
+        <filter-name>AccessFilterService</filter-name>
         <url-pattern>/testsp</url-pattern>
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>

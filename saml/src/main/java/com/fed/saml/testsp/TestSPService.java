@@ -17,8 +17,12 @@ public class TestSPService extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     	logger.info("In doGet() of TestSPService");
     	logger.info("Finally reached TestSP");
+    	
+    	// receive subject_id from session.
+    	String subjectId = (String) req.getSession().getAttribute("subject_id");
+    	
         resp.setContentType("text/html");
-        resp.getWriter().append("<h1>You are now at the requested resource</h1>");
-        resp.getWriter().append("This is the protected resource. You are authenticated");
+        resp.getWriter().append("<h1>*** SAML Authentication Successful ***</h1>");
+        resp.getWriter().append("Hi <b>" + subjectId + "</b>, You are authenticated by SAML IdP and now at the requested resource at SP.");
     }
 }

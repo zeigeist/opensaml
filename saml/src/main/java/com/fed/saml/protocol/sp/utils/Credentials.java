@@ -1,4 +1,4 @@
-package com.fed.saml.protocol.sp;
+package com.fed.saml.protocol.sp.utils;
 
 import java.io.InputStream;
 import java.security.KeyStore;
@@ -11,12 +11,12 @@ import org.opensaml.xml.security.credential.Credential;
 import org.opensaml.xml.security.credential.KeyStoreCredentialResolver;
 import org.opensaml.xml.security.criteria.EntityIDCriteria;
 
-public class SPCredentials {
+public class Credentials {
 
     public static KeyStore readKeystoreFromFile(String pathToKeyStore, String keyStorePassword) {
         try {
             KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
-            InputStream inputStream = SPCredentials.class.getResourceAsStream(pathToKeyStore);
+            InputStream inputStream = Credentials.class.getResourceAsStream(pathToKeyStore);
             keystore.load(inputStream, keyStorePassword.toCharArray());
             inputStream.close();
             return keystore;
@@ -28,9 +28,9 @@ public class SPCredentials {
     public static Credential getSPCredential(String aliasName) {
     	Credential credential = null;
     	try {
-            KeyStore keystore = readKeystoreFromFile(SPConstants.SP_KEY_STORE_PATH, SPConstants.KEY_STORE_PASSWORD);
+            KeyStore keystore = readKeystoreFromFile(Constants.SP_KEY_STORE_PATH, Constants.KEY_STORE_PASSWORD);
             Map<String, String> passwordMap = new HashMap<String, String>();
-            passwordMap.put(aliasName, SPConstants.KEY_STORE_ENTRY_PASSWORD);
+            passwordMap.put(aliasName, Constants.KEY_STORE_ENTRY_PASSWORD);
             KeyStoreCredentialResolver resolver = new KeyStoreCredentialResolver(keystore, passwordMap);
 
             Criteria criteria = new EntityIDCriteria(aliasName);
@@ -46,7 +46,7 @@ public class SPCredentials {
     public static Credential getIdPCredential(String aliasName) {
     	Credential credential = null;
     	try {
-            KeyStore keystore = readKeystoreFromFile(SPConstants.IDP_KEY_STORE_PATH, SPConstants.KEY_STORE_PASSWORD);
+            KeyStore keystore = readKeystoreFromFile(Constants.IDP_KEY_STORE_PATH, Constants.KEY_STORE_PASSWORD);
             Map<String, String> passwordMap = new HashMap<String, String>();
             //passwordMap.put(aliasName, SPConstants.KEY_STORE_ENTRY_PASSWORD);
             KeyStoreCredentialResolver resolver = new KeyStoreCredentialResolver(keystore, passwordMap);

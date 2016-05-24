@@ -1,4 +1,4 @@
-package com.fed.saml.protocol.sp;
+package com.fed.saml.protocol.sp.services;
 
 import java.io.IOException;
 import java.security.Provider;
@@ -7,6 +7,7 @@ import java.security.Security;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -19,11 +20,13 @@ import org.opensaml.xml.ConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fed.saml.protocol.sp.utils.Constants;
+
 /**
  * The filter intercepts the user and start the SAML authentication if it is not authenticated
  */
-public class SPAccessFilter implements Filter {
-    private static Logger logger = LoggerFactory.getLogger(SPAccessFilter.class);
+public class AccessFilterService implements Filter {
+    private static Logger logger = LoggerFactory.getLogger(AccessFilterService.class);
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -47,21 +50,21 @@ public class SPAccessFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest)request;
         HttpServletResponse httpServletResponse = (HttpServletResponse)response;
         logger.info("In doFilter() of SPAccessFilter");
-        if (httpServletRequest.getSession().getAttribute(SPConstants.AUTHENTICATED_SESSION_ATTRIBUTE) != null) {
+        if (httpServletRequest.getSession().getAttribute(Constants.AUTHENTICATED_SESSION_ATTRIBUTE) != null) {
         	logger.info("SAML User Authentication is done");
             chain.doFilter(request, response);
         } else {
         	logger.info("Have to do SAML user authentication");
-        	logger.info("Redirect to AuthnRequestService");
+        	logger.info("Forward request to SPAuthnRequestService");
         	setRequestedResourceInSession(httpServletRequest);
-            httpServletResponse.sendRedirect("sp/authnrequestservice");
+			request.getRequestDispatcher("sp/authnrequestservice").forward(request, response);
         }
         return;
     }
     
     // to prevent infinite looping between filter and 'sp/authnrequestservice'
     private void setRequestedResourceInSession(HttpServletRequest request) {
-        request.getSession().setAttribute(SPConstants.REQUESTED_RESOURCE_SESSION_ATTRIBUTE, request.getRequestURL().toString());
+        request.getSession().setAttribute(Constants.REQUESTED_RESOURCE_SESSION_ATTRIBUTE, request.getRequestURL().toString());
     }
     
     @Override

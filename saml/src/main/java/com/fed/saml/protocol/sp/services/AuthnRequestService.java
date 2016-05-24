@@ -1,4 +1,4 @@
-package com.fed.saml.protocol.sp;
+package com.fed.saml.protocol.sp.services;
 
 import java.io.IOException;
 
@@ -27,13 +27,15 @@ import org.opensaml.ws.transport.http.HttpServletResponseAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fed.saml.protocol.utils.OpenSAMLUtils;
+import com.fed.saml.protocol.sp.utils.Constants;
+import com.fed.saml.protocol.sp.utils.Credentials;
+import com.fed.saml.protocol.sp.utils.OpenSAMLUtils;
 
 /**
  * The filter intercepts the user and start the SAML authentication if it is not authenticated
  */
-public class SPAuthnRequestService extends HttpServlet {
-    private static Logger logger = LoggerFactory.getLogger(SPAuthnRequestService.class);
+public class AuthnRequestService extends HttpServlet {
+    private static Logger logger = LoggerFactory.getLogger(AuthnRequestService.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -54,15 +56,15 @@ public class SPAuthnRequestService extends HttpServlet {
         context.setPeerEntityEndpoint(getIPDEndpoint());
         context.setOutboundSAMLMessage(authnRequest);
         context.setOutboundMessageTransport(responseAdapter);
-        context.setOutboundSAMLMessageSigningCredential(SPCredentials.getSPCredential(SPConstants.SP_KEY_ALIAS));
+        context.setOutboundSAMLMessageSigningCredential(Credentials.getSPCredential(Constants.SP_KEY_ALIAS));
 
         HTTPRedirectDeflateEncoder encoder = new HTTPRedirectDeflateEncoder();
         logger.info("AuthnRequest: ");
         OpenSAMLUtils.logSAMLObject(authnRequest);
 
         try {
-        	logger.info("Sending AuthnRequest to IdPSSOService");
-            encoder.encode(context); // send to IdPSSOService
+        	logger.info("Sending AuthnRequest to IdP");
+            encoder.encode(context); // send to IdP
         } catch (MessageEncodingException e) {
             throw new RuntimeException(e);
         }
@@ -111,19 +113,19 @@ public class SPAuthnRequestService extends HttpServlet {
     }
 
     private String getSPIssuerValue() {
-        return SPConstants.SP_ENTITY_ID;
+        return Constants.SP_ENTITY_ID;
     }
 
     private String getSPNameQualifier() {
-        return SPConstants.SP_ENTITY_ID;
+        return Constants.SP_ENTITY_ID;
     }
 
     private String getAssertionConsumerEndpoint() {
-        return SPConstants.ASSERTION_CONSUMER_SERVICE;
+        return Constants.ASSERTION_CONSUMER_SERVICE;
     }
 
     private String getIPDSSODestination() {
-        return SPConstants.SSO_SERVICE;
+        return Constants.SSO_SERVICE;
     }
 
     private Endpoint getIPDEndpoint() {

@@ -11,7 +11,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import com.fed.saml.protocol.sp.SPCredentials;
+import com.fed.saml.protocol.sp.utils.Credentials;
 import com.fed.saml.trust.metadata.CryptoSecurity;
 import com.fed.saml.trust.metadata.MetadataUtils;
 import com.fed.saml.trust.metadata.objects.AssertionConsumerService;
@@ -49,7 +49,7 @@ public class MetadataGenerator {
     	 String metadata = null;
     	 X509Certificate x509Cert = null;
     	 try {
-    		 x509Cert = (X509Certificate) SPCredentials.readKeystoreFromFile(KEY_STORE_PATH, KEY_STORE_PASSWORD).getCertificate(KEY_ALIAS);
+    		 x509Cert = (X509Certificate) Credentials.readKeystoreFromFile(KEY_STORE_PATH, KEY_STORE_PASSWORD).getCertificate(KEY_ALIAS);
     	 } catch (KeyStoreException e2) {
     		 e2.printStackTrace();
     	 }
