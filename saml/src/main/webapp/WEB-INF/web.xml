@@ -3,19 +3,11 @@
         "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-    <display-name>SAML Implementation Using OpenSAML</display-name>
+    <display-name>SAML-SP Implementation Using OpenSAML</display-name>
 
     <servlet>
 	    <servlet-name>Metadata</servlet-name>
         <servlet-class>com.fed.saml.trust.metadata.handler.MetadataService</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>IdPSSOService</servlet-name>
-        <servlet-class>com.fed.saml.protocol.idp.IdPSSOService</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>IdPArtifactResolutionService</servlet-name>
-        <servlet-class>com.fed.saml.protocol.idp.IdPArtifactResolutionService</servlet-class>
     </servlet>
     <servlet>
 	    <servlet-name>SPAuthnRequestService</servlet-name>
@@ -29,23 +21,10 @@
         <servlet-name>TestSPService</servlet-name>
         <servlet-class>com.fed.saml.testsp.TestSPService</servlet-class>
     </servlet>
-	<servlet>
-    	<servlet-name>LoginService</servlet-name>
-    	<servlet-class>com.fed.saml.web.LoginService</servlet-class>
-   	</servlet>
    	
-   
 	<servlet-mapping>
 	    <servlet-name>Metadata</servlet-name>
 	    <url-pattern>/trust/metadata</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>IdPSSOService</servlet-name>
-        <url-pattern>/idp/sso</url-pattern>
-    </servlet-mapping>
-	<servlet-mapping>
-        <servlet-name>IdPArtifactResolutionService</servlet-name>
-        <url-pattern>/idp/artifactresolution</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>SPAuthnRequestService</servlet-name>
@@ -59,11 +38,6 @@
         <servlet-name>TestSPService</servlet-name>
         <url-pattern>/testsp</url-pattern>
     </servlet-mapping>
-   	<servlet-mapping>
-    	<servlet-name>LoginService</servlet-name>
-    	<url-pattern>/web/login</url-pattern>
-    </servlet-mapping>
-    
 
     <filter>
         <filter-name>SPAccessFilter</filter-name>

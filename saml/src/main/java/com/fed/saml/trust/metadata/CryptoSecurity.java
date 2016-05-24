@@ -1,4 +1,4 @@
-package com.fed.saml.security;
+package com.fed.saml.trust.metadata;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

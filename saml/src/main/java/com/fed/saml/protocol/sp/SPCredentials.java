@@ -11,9 +11,6 @@ import org.opensaml.xml.security.credential.Credential;
 import org.opensaml.xml.security.credential.KeyStoreCredentialResolver;
 import org.opensaml.xml.security.criteria.EntityIDCriteria;
 
-/**
- * Created by Privat on 13/05/14.
- */
 public class SPCredentials {
 
     public static KeyStore readKeystoreFromFile(String pathToKeyStore, String keyStorePassword) {

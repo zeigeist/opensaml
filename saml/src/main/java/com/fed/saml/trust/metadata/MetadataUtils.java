@@ -1,4 +1,4 @@
-package com.fed.saml.utils;
+package com.fed.saml.trust.metadata;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

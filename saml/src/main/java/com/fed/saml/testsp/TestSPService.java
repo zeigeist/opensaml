@@ -10,9 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * This servlet acts as the resource that the access filter is protecting
- */
 public class TestSPService extends HttpServlet {
     private static Logger logger = LoggerFactory.getLogger(TestSPService.class);
 

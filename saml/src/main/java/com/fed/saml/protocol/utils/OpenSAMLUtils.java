@@ -26,9 +26,6 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * Created by Privat on 4/6/14.
- */
 public class OpenSAMLUtils {
     private static Logger logger = LoggerFactory.getLogger(OpenSAMLUtils.class);
     private static SecureRandomIdentifierGenerator secureRandomIdGenerator;
