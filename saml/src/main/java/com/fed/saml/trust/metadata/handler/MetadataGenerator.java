@@ -11,7 +11,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import com.fed.saml.protocol.sp.utils.Credentials;
+import com.fed.saml.sp.protocol.utils.Credentials;
 import com.fed.saml.trust.metadata.CryptoSecurity;
 import com.fed.saml.trust.metadata.MetadataUtils;
 import com.fed.saml.trust.metadata.objects.AssertionConsumerService;

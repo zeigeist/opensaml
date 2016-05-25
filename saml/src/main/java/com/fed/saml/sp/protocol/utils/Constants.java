@@ -1,4 +1,4 @@
-package com.fed.saml.protocol.sp.utils;
+package com.fed.saml.sp.protocol.utils;
 
 public class Constants {
 	public static final String SP_ENTITY_ID = "http://localhost:8080/saml/sp";

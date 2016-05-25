@@ -1,4 +1,4 @@
-package com.fed.saml.protocol.sp.utils;
+package com.fed.saml.sp.protocol.utils;
 
 import java.io.InputStream;
 import java.security.KeyStore;

@@ -1,4 +1,4 @@
-package com.fed.saml.protocol.sp.handlers;
+package com.fed.saml.sp.protocol.authn.handlers;
 
 import java.io.IOException;
 
@@ -8,16 +8,16 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fed.saml.protocol.sp.utils.Constants;
+import com.fed.saml.sp.protocol.utils.Constants;
 
 public class ProtectedResourceHandler {
     private static Logger logger = LoggerFactory.getLogger(ProtectedResourceHandler.class);
 
-    public static void setAuthenticatedFlagInSession(HttpServletRequest req) {
+    public void setAuthenticatedFlagInSession(HttpServletRequest req) {
         req.getSession().setAttribute(Constants.AUTHENTICATED_SESSION_ATTRIBUTE, true);
     }
 
-	public static void redirectToRequestedResource(HttpServletRequest req, HttpServletResponse resp) {
+	public void redirectToRequestedResource(HttpServletRequest req, HttpServletResponse resp) {
 		// set subject_id from request to session, since we are redirecting to /testsp. 
 		req.getSession().setAttribute("subject_id", req.getAttribute("subject_id"));
 		

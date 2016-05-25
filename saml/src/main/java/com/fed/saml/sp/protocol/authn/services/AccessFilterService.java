@@ -1,4 +1,4 @@
-package com.fed.saml.protocol.sp.services;
+package com.fed.saml.sp.protocol.authn.services;
 
 import java.io.IOException;
 import java.security.Provider;
@@ -20,7 +20,7 @@ import org.opensaml.xml.ConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fed.saml.protocol.sp.utils.Constants;
+import com.fed.saml.sp.protocol.utils.Constants;
 
 /**
  * The filter intercepts the user and start the SAML authentication if it is not authenticated

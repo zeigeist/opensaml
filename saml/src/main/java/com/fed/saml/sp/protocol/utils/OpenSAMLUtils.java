@@ -1,4 +1,4 @@
-package com.fed.saml.protocol.sp.utils;
+package com.fed.saml.sp.protocol.utils;
 
 import org.opensaml.common.impl.SecureRandomIdentifierGenerator;
 import org.opensaml.saml2.binding.artifact.SAML2ArtifactType0004;

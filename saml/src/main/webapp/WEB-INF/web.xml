@@ -11,11 +11,11 @@
     </servlet>
     <servlet>
 	    <servlet-name>AuthnRequestService</servlet-name>
-        <servlet-class>com.fed.saml.protocol.sp.services.AuthnRequestService</servlet-class>
+        <servlet-class>com.fed.saml.sp.protocol.authn.services.AuthnRequestService</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>AssertionConsumerService</servlet-name>
-        <servlet-class>com.fed.saml.protocol.sp.services.AssertionConsumerService</servlet-class>
+        <servlet-class>com.fed.saml.sp.protocol.authn.services.AssertionConsumerService</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>TestSPService</servlet-name>
@@ -41,7 +41,7 @@
 
     <filter>
         <filter-name>AccessFilterService</filter-name>
-        <filter-class>com.fed.saml.protocol.sp.services.AccessFilterService</filter-class>
+        <filter-class>com.fed.saml.sp.protocol.authn.services.AccessFilterService</filter-class>
     </filter>
 
     <filter-mapping>

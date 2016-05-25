@@ -1,10 +1,5 @@
-package com.fed.saml.protocol.sp.services;
+package com.fed.saml.sp.protocol.authn.handlers;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.joda.time.DateTime;
@@ -27,25 +22,17 @@ import org.opensaml.ws.transport.http.HttpServletResponseAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fed.saml.protocol.sp.utils.Constants;
-import com.fed.saml.protocol.sp.utils.Credentials;
-import com.fed.saml.protocol.sp.utils.OpenSAMLUtils;
+import com.fed.saml.sp.protocol.utils.Constants;
+import com.fed.saml.sp.protocol.utils.Credentials;
+import com.fed.saml.sp.protocol.utils.OpenSAMLUtils;
 
 /**
  * The filter intercepts the user and start the SAML authentication if it is not authenticated
  */
-public class AuthnRequestService extends HttpServlet {
-    private static Logger logger = LoggerFactory.getLogger(AuthnRequestService.class);
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	logger.info("In doGet() of SPAuthnRequestService");
-    	logger.info("Have to do user authentication");
-    	logger.info("Create and send SAML AuthnRequest to IdP");
-    	redirectUserForAuthentication(response);
-    }
-
-    private void redirectUserForAuthentication(HttpServletResponse httpServletResponse) {
+public class AuthnRequestHandler {
+    private static Logger logger = LoggerFactory.getLogger(AuthnRequestHandler.class);
+    
+    public void redirectUserForAuthentication(HttpServletResponse httpServletResponse) {
         AuthnRequest authnRequest = buildAuthnRequest();
         redirectUserWithRequest(httpServletResponse, authnRequest);
     }
