@@ -67,9 +67,10 @@ public class AssertionConsumerService extends HttpServlet {
 			        OpenSAMLUtils.logSAMLObject(assertion);
 			
 			        // print saml message attributes
-			        artifactResponseHandler.logAssertionAttributes(assertion);
 			        artifactResponseHandler.logAuthenticationInstant(assertion);
 			        artifactResponseHandler.logAuthenticationMethod(assertion);
+			        artifactResponseHandler.logSAMLAttributes(assertion);
+
 			        String nameIdValue = artifactResponseHandler.getNameIdOfPrincipal(assertion);
 			        req.setAttribute("subject_id", nameIdValue); // set nameid as subject_id in request
 			        
@@ -86,9 +87,10 @@ public class AssertionConsumerService extends HttpServlet {
 				        OpenSAMLUtils.logSAMLObject(assertionList.get(0));
 				
 				        // print saml message attributes
-				        artifactResponseHandler.logAssertionAttributes(assertionList.get(0));
 				        artifactResponseHandler.logAuthenticationInstant(assertionList.get(0));
 				        artifactResponseHandler.logAuthenticationMethod(assertionList.get(0));
+				        artifactResponseHandler.logSAMLAttributes(assertionList.get(0));
+
 				        String nameIdValue = artifactResponseHandler.getNameIdOfPrincipal(assertionList.get(0));
 				        req.setAttribute("subject_id", nameIdValue);
 				        
