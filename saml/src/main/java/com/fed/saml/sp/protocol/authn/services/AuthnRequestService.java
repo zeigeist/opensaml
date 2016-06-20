@@ -7,23 +7,30 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.opensaml.saml2.core.AuthnRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fed.saml.sp.protocol.authn.handlers.AuthnRequestHandler;
+import com.fed.saml.sp.protocol.authn.handlers.SAMLAuthnRequest;
 
-/**
- * The filter intercepts the user and start the SAML authentication if it is not authenticated
- */
 public class AuthnRequestService extends HttpServlet {
     private static Logger logger = LoggerFactory.getLogger(AuthnRequestService.class);
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	logger.info("In doGet() of SPAuthnRequestService");
+    protected void doGet(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ServletException, IOException {
+    	logger.info("In doGet() of AuthnRequestService");
     	logger.info("Have to do user authentication");
     	logger.info("Create and send SAML AuthnRequest to IdP");
-    	AuthnRequestHandler authnRequestHandler = new AuthnRequestHandler();
-    	authnRequestHandler.redirectUserForAuthentication(response);
+    	
+    	processRequest(httpRequest, httpResponse);
     }
+    
+    protected void processRequest(HttpServletRequest httpRequest, HttpServletResponse httpResponse) 
+			throws ServletException, IOException {
+
+    	if("get".equalsIgnoreCase(httpRequest.getMethod())) {
+        	SAMLAuthnRequest samlAuthnRequest = new SAMLAuthnRequest();
+        	samlAuthnRequest.sendAuthRequest(httpResponse);
+		}
+	}
 }

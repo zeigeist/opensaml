@@ -7,10 +7,10 @@ import java.security.Security;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -38,7 +38,7 @@ public class AccessFilterService implements Filter {
         }
 
         try {
-            logger.info("Bootstrapping in init() of SPAccessFilter");
+            logger.info("Bootstrapping in init() of AccessFilterService");
             DefaultBootstrap.bootstrap();
         } catch (ConfigurationException e) {
             throw new RuntimeException("Bootstrapping failed");
@@ -49,13 +49,20 @@ public class AccessFilterService implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest)request;
         HttpServletResponse httpServletResponse = (HttpServletResponse)response;
-        logger.info("In doFilter() of SPAccessFilter");
+        logger.info("In doFilter() of AccessFilterService");
+        // get the saved cookie from file
+        // get the cookie from request
+        // if AUTHENTICATED_SESSION_ATTRIBUTE present in request cookie, check with existing saved cookie from file
+        // if value same, redirect to protected resource, else do SAML flow with IdP
+       
         if (httpServletRequest.getSession().getAttribute(Constants.AUTHENTICATED_SESSION_ATTRIBUTE) != null) {
         	logger.info("SAML User Authentication is done");
-            chain.doFilter(request, response);
+        	// set the user_id cookie
+        	setSPCookies(httpServletRequest, httpServletResponse);
+            chain.doFilter(request, response);            
         } else {
         	logger.info("Have to do SAML user authentication");
-        	logger.info("Forward request to SPAuthnRequestService");
+        	logger.info("Forward request to AuthnRequestService");
         	setRequestedResourceInSession(httpServletRequest);
 			request.getRequestDispatcher("sp/authnrequestservice").forward(request, response);
         }
@@ -65,6 +72,14 @@ public class AccessFilterService implements Filter {
     // to prevent infinite looping between filter and 'sp/authnrequestservice'
     private void setRequestedResourceInSession(HttpServletRequest request) {
         request.getSession().setAttribute(Constants.REQUESTED_RESOURCE_SESSION_ATTRIBUTE, request.getRequestURL().toString());
+    }
+    
+    private void setSPCookies(HttpServletRequest request, HttpServletResponse response) {
+    	Cookie userCookie = new Cookie(Constants.USER_ID_SESSION_ATTR_NAME, 
+    			request.getSession().getAttribute(Constants.USER_ID_SESSION_ATTR_NAME).toString());
+    	// save the cookie
+    	logger.info(userCookie.getName() + " | " + userCookie.getValue());
+    	response.addCookie(userCookie);
     }
     
     @Override

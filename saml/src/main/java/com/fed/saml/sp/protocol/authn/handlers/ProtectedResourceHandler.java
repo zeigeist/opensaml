@@ -18,8 +18,8 @@ public class ProtectedResourceHandler {
     }
 
 	public void redirectToRequestedResource(HttpServletRequest req, HttpServletResponse resp) {
-		// set subject_id from request to session, since we are redirecting to /testsp. 
-		req.getSession().setAttribute("subject_id", req.getAttribute("subject_id"));
+		// set USER_ID_SESSION_ATTR_NAME from request to session, since we are redirecting to /testsp. 
+		req.getSession().setAttribute(Constants.USER_ID_SESSION_ATTR_NAME, req.getAttribute(Constants.USER_ID_SESSION_ATTR_NAME));
 		
         String requestedResource = (String)req.getSession().getAttribute(Constants.REQUESTED_RESOURCE_SESSION_ATTRIBUTE);
         logger.info("Redirecting to requested resource: " + requestedResource);

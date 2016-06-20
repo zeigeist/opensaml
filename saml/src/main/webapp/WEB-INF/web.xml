@@ -18,6 +18,14 @@
         <servlet-class>com.fed.saml.sp.protocol.authn.services.AssertionConsumerService</servlet-class>
     </servlet>
     <servlet>
+	    <servlet-name>LogoutRequestService</servlet-name>
+        <servlet-class>com.fed.saml.sp.protocol.logout.services.LogoutRequestService</servlet-class>
+    </servlet>
+    <servlet>
+	    <servlet-name>LogoutResponseService</servlet-name>
+        <servlet-class>com.fed.saml.sp.protocol.logout.services.LogoutResponseService</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>TestSPService</servlet-name>
         <servlet-class>com.fed.saml.testsp.TestSPService</servlet-class>
     </servlet>
@@ -33,6 +41,14 @@
     <servlet-mapping>
         <servlet-name>AssertionConsumerService</servlet-name>
         <url-pattern>/sp/assertionconsumer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LogoutRequestService</servlet-name>
+        <url-pattern>/sp/logoutrequestservice</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LogoutResponseService</servlet-name>
+        <url-pattern>/sp/slo</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>TestSPService</servlet-name>
