@@ -1,5 +1,7 @@
 package com.fed.saml.sp.protocol.logout.handlers;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.joda.time.DateTime;
@@ -23,6 +25,7 @@ import com.fed.saml.sp.protocol.utils.Constants;
 import com.fed.saml.sp.protocol.utils.Credentials;
 import com.fed.saml.sp.protocol.utils.OpenSAMLUtils;
 import com.fed.saml.sp.protocol.utils.SAMLUtil;
+import com.fed.saml.trust.cot.idp.IdPPartnerConfig;
 
 public class LogoutRequestHandler {
     private static Logger logger = LoggerFactory.getLogger(LogoutRequestHandler.class);
@@ -84,7 +87,9 @@ public class LogoutRequestHandler {
     }
 
     private String getIPDSLODestination() {
-        return Constants.IDP_SLO_SERVICE;
+    	Map<String, String> idpConfig = IdPPartnerConfig.getIdPConfig(); // get IdPConfig from metadata
+
+        return idpConfig.get(Constants.KEY_IDP_SLO_REDIRECT);
     }
 
     private Endpoint getIPDEndpoint() {

@@ -1,6 +1,7 @@
 package com.fed.saml.sp.protocol.authn.handlers;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -31,6 +32,7 @@ import com.fed.saml.sp.protocol.utils.Constants;
 import com.fed.saml.sp.protocol.utils.Credentials;
 import com.fed.saml.sp.protocol.utils.OpenSAMLUtils;
 import com.fed.saml.sp.protocol.utils.SAMLUtil;
+import com.fed.saml.trust.cot.idp.IdPPartnerConfig;
 
 public class SAMLAuthnRequest {
     private static Logger logger = LoggerFactory.getLogger(SAMLAuthnRequest.class);
@@ -39,11 +41,10 @@ public class SAMLAuthnRequest {
     public SAMLAuthnRequest() {
     	authnRequest = buildAuthnRequest();
     }
-
+    
     public void sendAuthRequest(HttpServletResponse httpResponse) throws IOException {
-    	
     	// get binding configuration properties
-    	String binding = SAMLUtil.getConfigProperties().get(Constants.PROP_REQUEST_BINDING);
+    	String binding = SAMLUtil.getConfigProperties().get(Constants.PROP_REQUEST_BINDING);  
     	
     	if ("post".equals(binding)) {
 		    logger.info("Sending AuthnRequest to IdP using POST");
@@ -58,7 +59,7 @@ public class SAMLAuthnRequest {
         HttpServletResponseAdapter responseAdapter = new HttpServletResponseAdapter(httpResponse, true);
         BasicSAMLMessageContext<SAMLObject, AuthnRequest, SAMLObject> context = 
         		new BasicSAMLMessageContext<SAMLObject, AuthnRequest, SAMLObject>();
-        context.setPeerEntityEndpoint(getIPDEndpoint());
+        context.setPeerEntityEndpoint(getIdPEndpoint());
         context.setOutboundSAMLMessage(authnRequest);
         context.setOutboundMessageTransport(responseAdapter);
         context.setOutboundSAMLMessageSigningCredential(Credentials.getSPCredential(Constants.SP_KEY_ALIAS));
@@ -80,7 +81,7 @@ public class SAMLAuthnRequest {
         
     	BasicSAMLMessageContext<SAMLObject, AuthnRequest, SAMLObject> context = 
     			new BasicSAMLMessageContext<SAMLObject, AuthnRequest, SAMLObject>();
-        context.setPeerEntityEndpoint(getIPDEndpoint());
+        context.setPeerEntityEndpoint(getIdPEndpoint());
         context.setOutboundSAMLMessage(authnRequest);
         context.setOutboundMessageTransport(responseAdapter);
         context.setOutboundSAMLMessageSigningCredential(Credentials.getSPCredential(Constants.SP_KEY_ALIAS));
@@ -119,7 +120,7 @@ public class SAMLAuthnRequest {
     public AuthnRequest buildAuthnRequest() {
         AuthnRequest authnRequest = OpenSAMLUtils.buildSAMLObject(AuthnRequest.class);
         authnRequest.setIssueInstant(new DateTime());
-        authnRequest.setDestination(getIPDSSODestination());
+        authnRequest.setDestination(getIdPSSODestination());
         
         if ("post".equals(SAMLUtil.getConfigProperties().get(Constants.PROP_RESPONSE_BINDING))) {
         	authnRequest.setProtocolBinding(SAMLConstants.SAML2_POST_BINDING_URI);
@@ -201,16 +202,18 @@ public class SAMLAuthnRequest {
         return Constants.ASSERTION_CONSUMER_SERVICE;
     }
 
-    private String getIPDSSODestination() {
+    private String getIdPSSODestination() {
+    	Map<String, String> idpConfig = IdPPartnerConfig.getIdPConfig(); // get IdPConfig from metadata
+    	
     	if ("post".equals(SAMLUtil.getConfigProperties().get(Constants.PROP_REQUEST_BINDING))) {
-            return Constants.IDP_SSO_SERVICE_POST;
+    		return idpConfig.get(Constants.KEY_IDP_SSO_POST);
     	} else if ("redirect".equals(SAMLUtil.getConfigProperties().get(Constants.PROP_REQUEST_BINDING))) {
-        	return Constants.IDP_SSO_SERVICE_REDIRECT;
+    		return idpConfig.get(Constants.KEY_IDP_SSO_REDIRECT);
     	}
 		return null;
     }
 
-    private Endpoint getIPDEndpoint() {
+    private Endpoint getIdPEndpoint() {
         SingleSignOnService endpoint = OpenSAMLUtils.buildSAMLObject(SingleSignOnService.class);
         
         if ("post".equals(SAMLUtil.getConfigProperties().get(Constants.PROP_REQUEST_BINDING))) {
@@ -219,7 +222,7 @@ public class SAMLAuthnRequest {
         	endpoint.setBinding(SAMLConstants.SAML2_REDIRECT_BINDING_URI);
         }
         
-        endpoint.setLocation(getIPDSSODestination());
+        endpoint.setLocation(getIdPSSODestination());
 
         return endpoint;
     }

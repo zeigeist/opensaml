@@ -24,7 +24,7 @@ public class Credentials {
             throw new RuntimeException("Something went wrong reading keystore", e);
         }
     }
-
+    
     public static Credential getSPCredential(String aliasName) {
     	Credential credential = null;
     	try {

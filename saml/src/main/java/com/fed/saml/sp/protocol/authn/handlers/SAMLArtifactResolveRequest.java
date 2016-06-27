@@ -1,6 +1,7 @@
 package com.fed.saml.sp.protocol.authn.handlers;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,13 +33,10 @@ import com.fed.saml.sp.protocol.utils.Constants;
 import com.fed.saml.sp.protocol.utils.Credentials;
 import com.fed.saml.sp.protocol.utils.OpenSAMLUtils;
 import com.fed.saml.sp.protocol.utils.SAMLUtil;
+import com.fed.saml.trust.cot.idp.IdPPartnerConfig;
 
 public class SAMLArtifactResolveRequest {
     private static Logger logger = LoggerFactory.getLogger(SAMLArtifactResolveRequest.class);
-    
-    public SAMLArtifactResolveRequest() {
-    	
-    }
     
     public void processResponse(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws IOException {
 		// receive SAMLResponse from httRequest
@@ -95,6 +93,8 @@ public class SAMLArtifactResolveRequest {
     }
     
     private ArtifactResolve buildArtifactResolve(final Artifact artifact) {
+    	Map<String, String> idpConfig = IdPPartnerConfig.getIdPConfig(); // get IdPConfig from metadata
+
         ArtifactResolve artifactResolve = OpenSAMLUtils.buildSAMLObject(ArtifactResolve.class);
 
         Issuer issuer = OpenSAMLUtils.buildSAMLObject(Issuer.class);
@@ -105,8 +105,8 @@ public class SAMLArtifactResolveRequest {
 
         artifactResolve.setID(OpenSAMLUtils.generateSecureRandomId());
 
-        artifactResolve.setDestination(Constants.IDP_ARTIFACT_RESOLUTION_SERVICE);
-
+        artifactResolve.setDestination(idpConfig.get(Constants.KEY_IDP_ARTIFACT_RESOLUTION));
+        
         artifactResolve.setArtifact(artifact);
 
         return artifactResolve;
@@ -134,6 +134,8 @@ public class SAMLArtifactResolveRequest {
     }
     
     private ArtifactResponse sendAndReceiveArtifactResolve(final ArtifactResolve artifactResolve) {
+    	Map<String, String> idpConfig = IdPPartnerConfig.getIdPConfig(); // get IdPConfig from metadata
+
         try {
             Envelope envelope = OpenSAMLUtils.wrapInSOAPEnvelope(artifactResolve);
 
@@ -143,7 +145,7 @@ public class SAMLArtifactResolveRequest {
             BasicSOAPMessageContext soapContext = new BasicSOAPMessageContext();
             soapContext.setOutboundMessage(envelope);
 
-            soapClient.send(Constants.IDP_ARTIFACT_RESOLUTION_SERVICE, soapContext);
+            soapClient.send(idpConfig.get(Constants.KEY_IDP_ARTIFACT_RESOLUTION), soapContext);
 
             Envelope soapResponse = (Envelope)soapContext.getInboundMessage();
             return (ArtifactResponse)soapResponse.getBody().getUnknownXMLObjects().get(0);
