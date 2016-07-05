@@ -1,13 +1,13 @@
 # README #
 
-"fed" is a repo where all federation related projects are stored.
-First fed project is "saml", which is a implementation of SAML2.0
+SP - SAML implementation in OpenSAML
+
+More on OpenSAML: https://wiki.shibboleth.net/confluence/display/OpenSAML/Home
 
 ### What is this repository for? ###
 
 * Quick summary
 * Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
 ### How do I get set up? ###
 
