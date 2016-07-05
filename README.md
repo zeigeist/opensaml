@@ -21,9 +21,9 @@ Following NameID format supports:
  - Email address
 
 Note:
-1. This repo tested with Shibboleth IdP 2.4.0
-
-2. Check metadata by accessing http://<hostname>:8080/saml/trust/metadata.
+- This repo tested with Shibboleth IdP 2.4.0
+- Check metadata by accessing http://<hostname>:8080/saml/trust/metadata.
+- 
 
 
 ### How do I get set up? ###
