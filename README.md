@@ -22,6 +22,7 @@ Following NameID format supports:
 
 Note:
 1. This repo tested with Shibboleth IdP 2.4.0
+
 2. Check metadata by accessing http://<hostname>:8080/saml/trust/metadata.
 
 
