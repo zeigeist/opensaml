@@ -7,7 +7,6 @@ SAML2.0 implementation in OpenSAML Java library.
 More on OpenSAML: https://wiki.shibboleth.net/confluence/display/OpenSAML/Home
 
 
-
 ### What is this repository for? ###
 
 This repo contains implementation of Service Provider (SP) entity, where it protects the resource for which SAML authentication at Identity Provider (IdP) required to access the resource.
@@ -23,12 +22,14 @@ Following NameID format supports:
 ### How do I get set up? ###
 
 * Summary of set up
+
 This repo tested with Shibboleth IdP 2.4.0
 
 * Configuration
 * Dependencies
 * Database configuration
 * How to run tests
+
 Check metadata by accessing http://<hostname>:8080/saml/trust/metadata.
 
 * Deployment instructions
