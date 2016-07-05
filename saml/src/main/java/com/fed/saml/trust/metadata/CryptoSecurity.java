@@ -199,19 +199,6 @@ public class CryptoSecurity {
 				| SignatureException e) {
 			e.printStackTrace();
 		}
-
-		/*
-		 * // Update the algorithm, and resign. try { algo = (AlgorithmId)
-		 * cert.get(X509CertImpl.SIG_ALG); } catch (CertificateParsingException
-		 * e) { e.printStackTrace(); } try {
-		 * info.set(CertificateAlgorithmId.NAME + "." +
-		 * CertificateAlgorithmId.ALGORITHM, algo); } catch
-		 * (CertificateException | IOException e) { e.printStackTrace(); } cert
-		 * = new X509CertImpl(info); try { cert.sign(privkey, algorithm); }
-		 * catch (InvalidKeyException | CertificateException |
-		 * NoSuchAlgorithmException | NoSuchProviderException |
-		 * SignatureException e) { e.printStackTrace(); }
-		 */
 		return cert;
 	}
 }

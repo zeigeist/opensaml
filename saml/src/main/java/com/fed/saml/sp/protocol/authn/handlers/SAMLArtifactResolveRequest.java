@@ -30,7 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fed.saml.sp.protocol.utils.Constants;
-import com.fed.saml.sp.protocol.utils.Credentials;
+import com.fed.saml.sp.protocol.utils.CryptoUtil;
 import com.fed.saml.sp.protocol.utils.OpenSAMLUtils;
 import com.fed.saml.sp.protocol.utils.SAMLUtil;
 import com.fed.saml.trust.cot.idp.IdPPartnerConfig;
@@ -38,7 +38,8 @@ import com.fed.saml.trust.cot.idp.IdPPartnerConfig;
 public class SAMLArtifactResolveRequest {
     private static Logger logger = LoggerFactory.getLogger(SAMLArtifactResolveRequest.class);
     
-    public void processResponse(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws IOException {
+    public void processResponse(HttpServletRequest httpRequest, 
+    		HttpServletResponse httpResponse) throws IOException {
 		// receive SAMLResponse from httRequest
     	Artifact artifact = buildArtifactFromRequest(httpRequest);
 		boolean responseValid = false;
@@ -75,14 +76,17 @@ public class SAMLArtifactResolveRequest {
 				Assertion assertion = samlAssertion.getAssertionFromResponse();
 				
 				String nameIdValue = new SAMLNameID(assertion).getNameIdValue();
-				httpRequest.setAttribute(Constants.USER_ID_SESSION_ATTR_NAME, nameIdValue); // set nameid as user_id in request
+				httpRequest.setAttribute(Constants.USER_ID_SESSION_ATTR_NAME, 
+						nameIdValue); // set nameid as user_id in request
 			} else {
 				logger.info("Response error from IdP");
-				httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Response error from IdP");
+				httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, 
+						"Response error from IdP");
 			}
 		} else {
 			logger.info("Artifact not received from IdP via query");
-			httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Artifact not received from IdP via query");
+			httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, 
+					"Artifact not received from IdP via query");
 		}
     }
     
@@ -114,7 +118,7 @@ public class SAMLArtifactResolveRequest {
     
     private void signArtifactResolve(ArtifactResolve artifactResolve) {
         Signature signature = OpenSAMLUtils.buildSAMLObject(Signature.class);
-        signature.setSigningCredential(Credentials.getSPCredential(Constants.SP_KEY_ALIAS));
+        signature.setSigningCredential(CryptoUtil.getSPCredential(Constants.SP_KEY_ALIAS));
         signature.setSignatureAlgorithm(SignatureConstants.ALGO_ID_SIGNATURE_RSA_SHA1);
         signature.setCanonicalizationAlgorithm(SignatureConstants.ALGO_ID_C14N_EXCL_OMIT_COMMENTS);
 

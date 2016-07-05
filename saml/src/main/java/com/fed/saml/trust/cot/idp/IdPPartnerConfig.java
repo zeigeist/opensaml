@@ -39,7 +39,8 @@ public class IdPPartnerConfig {
 			idpMetaDataProvider.setRequireValidMetadata(true);
 			idpMetaDataProvider.setParserPool(new BasicParserPool());
 			idpMetaDataProvider.initialize();
-			idpEntityDescriptor = idpMetaDataProvider.getEntityDescriptor(SAMLUtil.getConfigProperties().get(Constants.PROP_IDP_ENTITY_ID));
+			idpEntityDescriptor = 
+					idpMetaDataProvider.getEntityDescriptor(SAMLUtil.getConfigProperties().get(Constants.PROP_IDP_ENTITY_ID));
 		} catch (MetadataProviderException e) {
 			e.printStackTrace();
 		}
@@ -49,7 +50,8 @@ public class IdPPartnerConfig {
     	idpConfig = new HashMap<String, String>();
     	
     	// SSO services endpoints
-    	for (SingleSignOnService singleSignOnService : idpEntityDescriptor.getIDPSSODescriptor(SAMLConstants.SAML20P_NS).getSingleSignOnServices()) { 
+    	for (SingleSignOnService singleSignOnService : 
+    		idpEntityDescriptor.getIDPSSODescriptor(SAMLConstants.SAML20P_NS).getSingleSignOnServices()) { 
     		if (singleSignOnService.getBinding().equals(SAMLConstants.SAML2_POST_BINDING_URI)) {
     			logger.info(singleSignOnService.getLocation());
     			idpConfig.put(Constants.KEY_IDP_SSO_POST, singleSignOnService.getLocation());
@@ -62,7 +64,8 @@ public class IdPPartnerConfig {
     	}
     	
     	// SLO services endpoints
-    	for (SingleLogoutService singleLogoutService : idpEntityDescriptor.getIDPSSODescriptor(SAMLConstants.SAML20P_NS).getSingleLogoutServices()) { 
+    	for (SingleLogoutService singleLogoutService : 
+    		idpEntityDescriptor.getIDPSSODescriptor(SAMLConstants.SAML20P_NS).getSingleLogoutServices()) { 
     		if (singleLogoutService.getBinding().equals(SAMLConstants.SAML2_POST_BINDING_URI)) {
     			logger.info(singleLogoutService.getLocation());
     			idpConfig.put(Constants.KEY_IDP_SLO_POST, singleLogoutService.getLocation());

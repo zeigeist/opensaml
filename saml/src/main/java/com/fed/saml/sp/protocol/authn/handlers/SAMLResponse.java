@@ -34,7 +34,8 @@ public class SAMLResponse {
 
 	}
 	
-	public void processResponse(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws IOException {
+	public void processResponse(HttpServletRequest httpRequest, 
+			HttpServletResponse httpResponse) throws IOException {
 		// receive SAMLResponse from httRequest
 		String responseMessage = httpRequest.getParameter("SAMLResponse");
 		boolean responseValid = false;

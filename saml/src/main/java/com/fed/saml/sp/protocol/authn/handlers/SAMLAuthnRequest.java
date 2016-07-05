@@ -29,7 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fed.saml.sp.protocol.utils.Constants;
-import com.fed.saml.sp.protocol.utils.Credentials;
+import com.fed.saml.sp.protocol.utils.CryptoUtil;
 import com.fed.saml.sp.protocol.utils.OpenSAMLUtils;
 import com.fed.saml.sp.protocol.utils.SAMLUtil;
 import com.fed.saml.trust.cot.idp.IdPPartnerConfig;
@@ -62,7 +62,7 @@ public class SAMLAuthnRequest {
         context.setPeerEntityEndpoint(getIdPEndpoint());
         context.setOutboundSAMLMessage(authnRequest);
         context.setOutboundMessageTransport(responseAdapter);
-        context.setOutboundSAMLMessageSigningCredential(Credentials.getSPCredential(Constants.SP_KEY_ALIAS));
+        context.setOutboundSAMLMessageSigningCredential(CryptoUtil.getSPCredential(Constants.SP_KEY_ALIAS));
 
         HTTPRedirectDeflateEncoder encoder = new HTTPRedirectDeflateEncoder();
         logger.info("AuthnRequest: ");
@@ -84,7 +84,7 @@ public class SAMLAuthnRequest {
         context.setPeerEntityEndpoint(getIdPEndpoint());
         context.setOutboundSAMLMessage(authnRequest);
         context.setOutboundMessageTransport(responseAdapter);
-        context.setOutboundSAMLMessageSigningCredential(Credentials.getSPCredential(Constants.SP_KEY_ALIAS));
+        context.setOutboundSAMLMessageSigningCredential(CryptoUtil.getSPCredential(Constants.SP_KEY_ALIAS));
         context.setRelayState("relayState");
 
         // using velocity template engine, post the AuthRequest thru template form.
@@ -101,7 +101,7 @@ public class SAMLAuthnRequest {
 			throw new RuntimeException(e);
 		}
 	
-		HTTPPostEncoder encoder = new HTTPPostEncoder(velocityEngine, "/templates/saml2-post-binding.vm");
+		HTTPPostEncoder encoder = new HTTPPostEncoder(velocityEngine, Constants.POST_TEMPLATE);
 		logger.info("AuthnRequest: ");
         OpenSAMLUtils.logSAMLObject(authnRequest);
         
@@ -133,7 +133,7 @@ public class SAMLAuthnRequest {
         authnRequest.setID(OpenSAMLUtils.generateSecureRandomId());
         authnRequest.setIssuer(buildIssuer());
         authnRequest.setNameIDPolicy(buildNameIdPolicy());
-        authnRequest.setRequestedAuthnContext(buildRequestedAuthnContext());
+        //authnRequest.setRequestedAuthnContext(buildRequestedAuthnContext());
 
         return authnRequest;
     }
@@ -142,7 +142,7 @@ public class SAMLAuthnRequest {
      * Build RequestedAuthnContext using Password Authn Context and Minimum comparison type.
      * @return
      */
-    private RequestedAuthnContext buildRequestedAuthnContext() {
+    /*private RequestedAuthnContext buildRequestedAuthnContext() {
         AuthnContextClassRef passwordAuthnContextClassRef = OpenSAMLUtils.buildSAMLObject(AuthnContextClassRef.class);
         passwordAuthnContextClassRef.setAuthnContextClassRef(AuthnContext.PASSWORD_AUTHN_CTX);
 
@@ -153,7 +153,7 @@ public class SAMLAuthnRequest {
 
         return requestedAuthnContext;
 
-    }
+    }*/
 
     /**
      * NameID supported are unspecified, emailAddrrss, transient, persistent.
@@ -199,7 +199,10 @@ public class SAMLAuthnRequest {
     }
 
     private String getAssertionConsumerEndpoint() {
-        return Constants.ASSERTION_CONSUMER_SERVICE;
+    	return Constants.PROTOCOL + "://" + 
+    		   SAMLUtil.getConfigProperties().get(Constants.PROP_HOSTNAME) + ":" + 
+    		   SAMLUtil.getConfigProperties().get(Constants.PROP_PORT) + 
+    		   Constants.ASSERTION_CONSUMER_SERVICE;
     }
 
     private String getIdPSSODestination() {

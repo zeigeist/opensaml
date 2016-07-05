@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import com.fed.saml.sp.protocol.utils.Constants;
-import com.fed.saml.sp.protocol.utils.Credentials;
+import com.fed.saml.sp.protocol.utils.CryptoUtil;
 import com.fed.saml.sp.protocol.utils.OpenSAMLUtils;
 import com.fed.saml.trust.cot.idp.IdPPartnerConfig;
 
@@ -77,9 +77,11 @@ public class SAMLAssertion {
 	private Assertion decryptAssertion(EncryptedAssertion encryptedAssertion) {
     	Assertion decryptedAssertion = null;
 	    if(encryptedAssertion != null) {
-	        StaticKeyInfoCredentialResolver keyInfoCredentialResolver = new StaticKeyInfoCredentialResolver(Credentials.getSPCredential(Constants.SP_KEY_ALIAS));
+	        StaticKeyInfoCredentialResolver keyInfoCredentialResolver = 
+	        		new StaticKeyInfoCredentialResolver(CryptoUtil.getSPCredential(Constants.SP_KEY_ALIAS));
 	
-	        Decrypter decrypter = new Decrypter(null, keyInfoCredentialResolver, new InlineEncryptedKeyResolver());
+	        Decrypter decrypter = new Decrypter(null, keyInfoCredentialResolver, 
+	        		new InlineEncryptedKeyResolver());
 	        decrypter.setRootInNewDocument(true);
 	
 	        try {
@@ -100,8 +102,6 @@ public class SAMLAssertion {
 			try {
 				SAMLSignatureProfileValidator profileValidator = new SAMLSignatureProfileValidator();
 				profileValidator.validate(assertion.getSignature());
-
-				// SignatureValidator sigValidator = new SignatureValidator(Credentials.getIdPCredential(Constants.IDP_KEY_ALIAS));
 
 				Credential idPCredential = null;
 				try {

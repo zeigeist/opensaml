@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fed.saml.sp.protocol.utils.Constants;
-import com.fed.saml.sp.protocol.utils.Credentials;
+import com.fed.saml.sp.protocol.utils.CryptoUtil;
 import com.fed.saml.sp.protocol.utils.OpenSAMLUtils;
 import com.fed.saml.sp.protocol.utils.SAMLUtil;
 import com.fed.saml.trust.cot.idp.IdPPartnerConfig;
@@ -41,7 +41,7 @@ public class LogoutRequestHandler {
         context.setPeerEntityEndpoint(getIPDEndpoint());
         context.setOutboundSAMLMessage(logoutRequest);
         context.setOutboundMessageTransport(responseAdapter);
-        context.setOutboundSAMLMessageSigningCredential(Credentials.getSPCredential(Constants.SP_KEY_ALIAS));
+        context.setOutboundSAMLMessageSigningCredential(CryptoUtil.getSPCredential(Constants.SP_KEY_ALIAS));
 
         HTTPRedirectDeflateEncoder encoder = new HTTPRedirectDeflateEncoder();
         logger.info("LogoutRequest: ");

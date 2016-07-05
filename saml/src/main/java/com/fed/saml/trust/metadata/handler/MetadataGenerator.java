@@ -2,7 +2,6 @@ package com.fed.saml.trust.metadata.handler;
 
 import java.io.StringWriter;
 import java.math.BigInteger;
-import java.security.KeyPair;
 import java.security.KeyStoreException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
@@ -11,8 +10,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import com.fed.saml.sp.protocol.utils.Credentials;
-import com.fed.saml.trust.metadata.CryptoSecurity;
+import com.fed.saml.sp.protocol.utils.Constants;
+import com.fed.saml.sp.protocol.utils.CryptoUtil;
+import com.fed.saml.sp.protocol.utils.SAMLUtil;
 import com.fed.saml.trust.metadata.MetadataUtils;
 import com.fed.saml.trust.metadata.objects.AssertionConsumerService;
 import com.fed.saml.trust.metadata.objects.EncryptionMethod;
@@ -20,18 +20,17 @@ import com.fed.saml.trust.metadata.objects.EntityDescriptor;
 import com.fed.saml.trust.metadata.objects.KeyDescriptor;
 import com.fed.saml.trust.metadata.objects.KeyInfo;
 import com.fed.saml.trust.metadata.objects.SPSSODescriptor;
-import com.fed.saml.trust.metadata.objects.SingleLogoutService;
 import com.fed.saml.trust.metadata.objects.X509Data;
 import com.fed.saml.trust.metadata.objects.X509IssuerSerial;
 
 public class MetadataGenerator {
-	 private static final String KEY_STORE_PASSWORD = "password";
-     private static final String KEY_STORE_PATH = "/SPKeystore.jks";
-     private static final String KEY_ALIAS = "spkey";
      
-     private static final String ENTITY_ID = "http://localhost:8080/saml/sp";
-     private static final String ACS_URL = "http://localhost:8080/saml/sp/assertionconsumer";
-     private static final String SLO_POST_URL = "http://localhost:8080/saml/sp/slo";
+     private static final String ACS_URL = Constants.PROTOCOL + "://" + 
+  		   								   SAMLUtil.getConfigProperties().get(Constants.PROP_HOSTNAME) + ":" + 
+  		   								   SAMLUtil.getConfigProperties().get(Constants.PROP_PORT) + 
+  		   								   Constants.ASSERTION_CONSUMER_SERVICE;
+     //	No slo support
+     //private static final String SLO_POST_URL = "http://localhost:8080/saml/sp/slo";
      
      private static final String KEY_DESCRIPTOR_SIGNING = "signing";
      private static final String KEY_DESCRIPTOR_ENCYPTION = "encryption";
@@ -39,9 +38,9 @@ public class MetadataGenerator {
      private static final String ENCRYPTION_METHOD_RSA = "http://www.w3.org/2001/04/xmlenc#rsa-1_5";
      private static final String ENCRYPTION_METHOD_AES_128 = "http://www.w3.org/2001/04/xmlenc#aes128-cbc";
 	    
-     private static final String REDIRECT_BINDING_FQDN = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect";
+     private static final String ARTIFACT_BINDING_FQDN = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact";
      
-     private static final String POST_BINDING_FQDN = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact";
+     private static final String POST_BINDING_FQDN = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST";
      
      private static final String PROTOCOL_SUPPORT_ENUMERATION = "urn:oasis:names:tc:SAML:2.0:protocol urn:oasis:names:tc:SAML:1.1:protocol";
      
@@ -49,7 +48,8 @@ public class MetadataGenerator {
     	 String metadata = null;
     	 X509Certificate x509Cert = null;
     	 try {
-    		 x509Cert = (X509Certificate) Credentials.readKeystoreFromFile(KEY_STORE_PATH, KEY_STORE_PASSWORD).getCertificate(KEY_ALIAS);
+    		 x509Cert = (X509Certificate) CryptoUtil.readKeystoreFromFile(Constants.SP_KEY_STORE_PATH, 
+    				 Constants.SP_KEY_STORE_PASSWORD).getCertificate(Constants.SP_KEY_ALIAS);
     	 } catch (KeyStoreException e2) {
     		 e2.printStackTrace();
     	 }
@@ -87,7 +87,7 @@ public class MetadataGenerator {
     		 keyDescriptorEncryption.getEncryptionMethod().add(encryptionMethodRSA);
     		 keyDescriptorEncryption.getEncryptionMethod().add(encryptionMethodAES128);
 
-    		 SingleLogoutService singleLogoutServiceRedirect = new SingleLogoutService();
+    		 /*SingleLogoutService singleLogoutServiceRedirect = new SingleLogoutService();
     		 singleLogoutServiceRedirect.setBinding(REDIRECT_BINDING_FQDN);
     		 singleLogoutServiceRedirect.setLocation(SLO_POST_URL);
     		 singleLogoutServiceRedirect.setResponseLocation(SLO_POST_URL);
@@ -95,27 +95,27 @@ public class MetadataGenerator {
     		 SingleLogoutService singleLogoutServicePost = new SingleLogoutService();
     		 singleLogoutServicePost.setBinding(POST_BINDING_FQDN);
     		 singleLogoutServicePost.setLocation(SLO_POST_URL);
-    		 singleLogoutServicePost.setResponseLocation(SLO_POST_URL);
+    		 singleLogoutServicePost.setResponseLocation(SLO_POST_URL);*/
 
-    		 AssertionConsumerService assertionConsumerService = new AssertionConsumerService();
-    		 assertionConsumerService.setBinding(POST_BINDING_FQDN);
-    		 assertionConsumerService.setIndex(new BigInteger("0"));
-    		 assertionConsumerService.setIsDefault(true);
-    		 assertionConsumerService.setLocation(ACS_URL);
-
+    		 AssertionConsumerService assertionConsumerServicePost = new AssertionConsumerService();
+    		 assertionConsumerServicePost.setBinding(POST_BINDING_FQDN);
+    		 assertionConsumerServicePost.setIndex(new BigInteger("0"));
+    		 assertionConsumerServicePost.setIsDefault(true);
+    		 assertionConsumerServicePost.setLocation(ACS_URL);
+    		 
     		 SPSSODescriptor spSSODescriptor = new SPSSODescriptor();
     		 spSSODescriptor.setProtocolSupportEnumeration(PROTOCOL_SUPPORT_ENUMERATION);
     		 spSSODescriptor.setWantAssertionsSigned(false);
     		 spSSODescriptor.setAuthnRequestsSigned(false);
     		 spSSODescriptor.getKeyDescriptor().add(keyDescriptorSigning);
     		 spSSODescriptor.getKeyDescriptor().add(keyDescriptorEncryption);
-    		 spSSODescriptor.getSingleLogoutService().add(singleLogoutServiceRedirect);
-    		 spSSODescriptor.getSingleLogoutService().add(singleLogoutServicePost);
-    		 spSSODescriptor.setAssertionConsumerService(assertionConsumerService);
+    		 //spSSODescriptor.getSingleLogoutService().add(singleLogoutServiceRedirect);
+    		 //spSSODescriptor.getSingleLogoutService().add(singleLogoutServicePost);
+    		 spSSODescriptor.setAssertionConsumerService(assertionConsumerServicePost);
 
     		 EntityDescriptor entityDescriptor = new EntityDescriptor();
     		 entityDescriptor.setID(MetadataUtils.getRandomNumber());
-    		 entityDescriptor.setEntityID(ENTITY_ID);
+    		 entityDescriptor.setEntityID(SAMLUtil.getConfigProperties().get(Constants.PROP_SP_ENTITY_ID));
     		 entityDescriptor.setValidUntil(MetadataUtils.getValidUntilDate());
     		 entityDescriptor.setSPSSODescriptor(spSSODescriptor);
 

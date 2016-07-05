@@ -46,7 +46,8 @@ public class AccessFilterService implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, 
+    		FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest)request;
         HttpServletResponse httpServletResponse = (HttpServletResponse)response;
         logger.info("In doFilter() of AccessFilterService");
@@ -71,7 +72,8 @@ public class AccessFilterService implements Filter {
     
     // to prevent infinite looping between filter and 'sp/authnrequestservice'
     private void setRequestedResourceInSession(HttpServletRequest request) {
-        request.getSession().setAttribute(Constants.REQUESTED_RESOURCE_SESSION_ATTRIBUTE, request.getRequestURL().toString());
+        request.getSession().setAttribute(Constants.REQUESTED_RESOURCE_SESSION_ATTRIBUTE, 
+        		request.getRequestURL().toString());
     }
     
     private void setSPCookies(HttpServletRequest request, HttpServletResponse response) {

@@ -17,7 +17,8 @@ public class AuthnRequestService extends HttpServlet {
     private static Logger logger = LoggerFactory.getLogger(AuthnRequestService.class);
 
     @Override
-    protected void doGet(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest httpRequest, 
+    		HttpServletResponse httpResponse) throws ServletException, IOException {
     	logger.info("In doGet() of AuthnRequestService");
     	logger.info("Have to do user authentication");
     	logger.info("Create and send SAML AuthnRequest to IdP");
