@@ -2,7 +2,7 @@ apply plugin: "maven"
 apply plugin: "war"
 apply plugin: "jetty"
 
-buildDir = '/Users/ganesh/scratch/git/fed-build/'
+buildDir = '<choose_build_location>'
 
 group = 'com.fed.saml'
 version = '1.0-SNAPSHOT'
