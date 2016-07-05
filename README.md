@@ -13,8 +13,8 @@ More on OpenSAML: https://wiki.shibboleth.net/confluence/display/OpenSAML/Home
 This repo contains implementation of Service Provider (SP) entity, where it protects the resource for which SAML authentication at Identity Provider (IdP) required to access the resource.
 
 Following SAML Bindings and their combinations supports:
- - Request Binding: Redirect and POST
- - Response Binding Artifact and POST
+ - Request Bindings:  HTTP-Redirect and HTTP-POST
+ - Response Bindings: Artifact and HTTP-POST
 
 Following NameID format supports:
  - Unspecified 
