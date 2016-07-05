@@ -1,21 +1,28 @@
 package com.fed.saml.trust.cot.idp;
 
 import java.io.File;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.opensaml.common.xml.SAMLConstants;
 import org.opensaml.saml2.metadata.ArtifactResolutionService;
 import org.opensaml.saml2.metadata.EntityDescriptor;
+import org.opensaml.saml2.metadata.KeyDescriptor;
 import org.opensaml.saml2.metadata.SingleLogoutService;
 import org.opensaml.saml2.metadata.SingleSignOnService;
 import org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider;
 import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.opensaml.xml.parse.BasicParserPool;
+import org.opensaml.xml.security.credential.Credential;
+import org.opensaml.xml.security.x509.BasicX509Credential;
+import org.opensaml.xml.signature.X509Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fed.saml.sp.protocol.utils.Constants;
+import com.fed.saml.sp.protocol.utils.CryptoUtil;
 import com.fed.saml.sp.protocol.utils.SAMLUtil;
 
 public class IdPPartnerConfig {
@@ -38,7 +45,7 @@ public class IdPPartnerConfig {
 		}
 	}
 	
-    public static Map<String, String> getIdPConfig() {
+    public static Map<String, String> getIdPConfig()  {
     	idpConfig = new HashMap<String, String>();
     	
     	// SSO services endpoints
@@ -67,7 +74,7 @@ public class IdPPartnerConfig {
     		}
     	}
     	
-    	// Artifact Resolution services endpoints
+    	// Artifact Resolution services endpoint
     	String artifactResolutionServiceURL = null;
     	for (ArtifactResolutionService ars : 
     		idpEntityDescriptor.getIDPSSODescriptor(SAMLConstants.SAML20P_NS).getArtifactResolutionServices()) {
@@ -77,7 +84,26 @@ public class IdPPartnerConfig {
     			idpConfig.put(Constants.KEY_IDP_ARTIFACT_RESOLUTION, artifactResolutionServiceURL);
     		}
     	}
-
-		return idpConfig;
+    	
+    	return idpConfig;
     }
+  
+    public static Credential getCertificateFromMetaData() throws CertificateException {
+		for (KeyDescriptor key : idpEntityDescriptor.getIDPSSODescriptor(SAMLConstants.SAML20P_NS).getKeyDescriptors()) {
+			X509Data x509 = key.getKeyInfo().getX509Datas().get(0);
+			org.opensaml.xml.signature.X509Certificate x509Cert = x509.getX509Certificates().get(0);
+			logger.info("Found Certificate: "+ x509Cert.getValue().toString());
+			
+			String certString = CryptoUtil.convertCertToPemFormat(x509Cert.getValue());
+		
+			X509Certificate certificate = CryptoUtil.convertStringToCertificate(certString);
+			
+			// convert X509Certificate to BasicX509Credential
+	        BasicX509Credential credential = new BasicX509Credential();
+	        credential.setEntityCertificate(certificate);
+
+			return credential;
+		}
+		return null;
+	}
 }

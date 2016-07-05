@@ -19,7 +19,6 @@ public class Constants {
     public static final String KEY_STORE_PASSWORD = "password";
     public static final String KEY_STORE_ENTRY_PASSWORD = "password";
     public static final String SP_KEY_STORE_PATH = "/SPKeystore.jks";
-    public static final String IDP_KEY_STORE_PATH = "/IdPKeystore.jks"; // need to remove
     
     public static final String USER_ID_SESSION_ATTR_NAME = "user_id";
     
@@ -28,11 +27,6 @@ public class Constants {
     public static final String KEY_IDP_SSO_POST = "idp_sso_post_key";
     public static final String KEY_IDP_SLO_REDIRECT = "idp_slo_redirect_key";
     public static final String KEY_IDP_SLO_POST = "idp_slo_post_key";
-   
-    
-    //public static final String IDP_ARTIFACT_RESOLUTION_SERVICE = "http://localhost:8090/idp/profile/SAML2/SOAP/ArtifactResolution";
-    //public static final String IDP_SSO_SERVICE_REDIRECT = "http://localhost:8090/idp/profile/SAML2/Redirect/SSO";
-    //public static final String IDP_SSO_SERVICE_POST = "http://localhost:8090/idp/profile/SAML2/POST/SSO";
-    //public static final String IDP_SLO_SERVICE = "http://localhost:8090/idp/profile/SAML2/Redirect/SLO";
+    public static final String KEY_IDP_CERTIFICATE = "idp_certificate_key";
 
 }

@@ -1,44 +1,31 @@
 package com.fed.saml.sp.protocol.authn.handlers;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.security.cert.CertificateException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.bouncycastle.util.encoders.Base64;
-import org.opensaml.Configuration;
 import org.opensaml.saml2.core.Assertion;
 import org.opensaml.saml2.core.Attribute;
 import org.opensaml.saml2.core.AttributeStatement;
 import org.opensaml.saml2.core.EncryptedAssertion;
 import org.opensaml.saml2.core.Response;
-import org.opensaml.saml2.core.StatusCode;
 import org.opensaml.saml2.encryption.Decrypter;
 import org.opensaml.security.SAMLSignatureProfileValidator;
-import org.opensaml.xml.XMLObject;
 import org.opensaml.xml.encryption.DecryptionException;
 import org.opensaml.xml.encryption.InlineEncryptedKeyResolver;
-import org.opensaml.xml.io.Unmarshaller;
-import org.opensaml.xml.io.UnmarshallerFactory;
-import org.opensaml.xml.io.UnmarshallingException;
+import org.opensaml.xml.security.credential.Credential;
 import org.opensaml.xml.security.keyinfo.StaticKeyInfoCredentialResolver;
 import org.opensaml.xml.signature.SignatureValidator;
 import org.opensaml.xml.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 import com.fed.saml.sp.protocol.utils.Constants;
 import com.fed.saml.sp.protocol.utils.Credentials;
 import com.fed.saml.sp.protocol.utils.OpenSAMLUtils;
+import com.fed.saml.trust.cot.idp.IdPPartnerConfig;
 
 public class SAMLAssertion {
 	private static Logger logger = LoggerFactory.getLogger(SAMLAssertion.class);
@@ -105,27 +92,45 @@ public class SAMLAssertion {
     }
 	
 	private void verifyAssertionSignature(Assertion assertion) {
-    	if(assertion != null) {
-    		if (!assertion.isSigned()) {
-    			throw new RuntimeException("The SAML Assertion was not signed");
-    		}
+		if (assertion != null) {
+			if (!assertion.isSigned()) {
+				throw new RuntimeException("The SAML Assertion was not signed");
+			}
 
-	        try {
-	            SAMLSignatureProfileValidator profileValidator = new SAMLSignatureProfileValidator();
-	            profileValidator.validate(assertion.getSignature());
-	
-	            SignatureValidator sigValidator = new SignatureValidator(Credentials.getIdPCredential(Constants.IDP_KEY_ALIAS));
-	
-	            sigValidator.validate(assertion.getSignature());
-	
-	            logger.info("SAML Assertion signature verified");
-	        } catch (ValidationException e) {
-	        	e.printStackTrace();
-	        	logger.error(e.getMessage());
-	            throw new RuntimeException(e);
-	        }
-    	}
-    }
+			try {
+				SAMLSignatureProfileValidator profileValidator = new SAMLSignatureProfileValidator();
+				profileValidator.validate(assertion.getSignature());
+
+				// SignatureValidator sigValidator = new SignatureValidator(Credentials.getIdPCredential(Constants.IDP_KEY_ALIAS));
+
+				Credential idPCredential = null;
+				try {
+					idPCredential = IdPPartnerConfig.getCertificateFromMetaData();
+				} catch (CertificateException e) {
+					e.printStackTrace();
+					logger.error(e.getMessage());
+					throw new RuntimeException(e);
+				}
+				
+				SignatureValidator sigValidator = null;
+
+				if (idPCredential != null) {
+					sigValidator = new SignatureValidator(idPCredential);
+				} else {
+					logger.error("Cannot get certificate from given metadata");
+					throw new RuntimeException();
+				}
+
+				sigValidator.validate(assertion.getSignature());
+
+				logger.info("SAML Assertion signature verified");
+			} catch (ValidationException e) {
+				e.printStackTrace();
+				logger.error(e.getMessage());
+				throw new RuntimeException(e);
+			}
+		}
+	}
 	
 	private void logAuthenticationInstant(Assertion assertion) {
         if (assertion != null && assertion.getAuthnStatements() != null) {

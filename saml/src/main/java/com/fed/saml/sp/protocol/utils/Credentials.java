@@ -43,7 +43,7 @@ public class Credentials {
         return credential;
     }
     
-    public static Credential getIdPCredential(String aliasName) {
+    /*public static Credential getIdPCredential(String aliasName) {
     	Credential credential = null;
     	try {
             KeyStore keystore = readKeystoreFromFile(Constants.IDP_KEY_STORE_PATH, Constants.KEY_STORE_PASSWORD);
@@ -59,5 +59,5 @@ public class Credentials {
             throw new RuntimeException("Something went wrong reading credentials", e);
         }
         return credential;
-    }
+    }*/
 }
