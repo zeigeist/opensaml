@@ -1,4 +1,4 @@
-package com.fed.saml.protocol.utils;
+package com.fed.saml.sp.protocol.utils;
 
 import org.opensaml.common.impl.SecureRandomIdentifierGenerator;
 import org.opensaml.saml2.binding.artifact.SAML2ArtifactType0004;
@@ -26,9 +26,6 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * Created by Privat on 4/6/14.
- */
 public class OpenSAMLUtils {
     private static Logger logger = LoggerFactory.getLogger(OpenSAMLUtils.class);
     private static SecureRandomIdentifierGenerator secureRandomIdGenerator;
@@ -101,15 +98,8 @@ public class OpenSAMLUtils {
     }
     
     public static String getSAML2ArtifactType0004(String endpointIndex, String sourceId, String msgHandle) {
-
-        // generate SAML artifact from 3 components and persist it 
-        // 3 components: TypeCode, EndpointIndex of artifact resolution endpoint of issuer - "idpArtResolutionIndx"
-        // and RemainingArtifact: SourceId = SHA-1 hash of the issuer's entityID - "http://local/samlidp"
-        //                        MessageHandle = random bytes sequence that references a SAML message that the artifact issuer is willing to produce on-demand
-//        byte[] endpointIndex = "12".getBytes();
-//        byte[] sourceId = "http://local/samlidp".getBytes();
-//        byte[] msgHandle = "samlMessageHandleRef".getBytes();
-        SAML2ArtifactType0004 samlArtifact = new SAML2ArtifactType0004(endpointIndex.getBytes(), sourceId.getBytes(), msgHandle.getBytes());
+        SAML2ArtifactType0004 samlArtifact = 
+        		new SAML2ArtifactType0004(endpointIndex.getBytes(), sourceId.getBytes(), msgHandle.getBytes());
         return samlArtifact.toString();
     }
     

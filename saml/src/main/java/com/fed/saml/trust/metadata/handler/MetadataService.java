@@ -4,8 +4,6 @@ import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import com.fed.saml.trust.metadata.handler.MetadataGenerator;
-
 public class MetadataService extends HttpServlet {
 
 	private String metadata;
@@ -16,8 +14,9 @@ public class MetadataService extends HttpServlet {
 		
 	}
 
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		metadata = new MetadataGenerator2().generateMetadata();
+	public void doGet(HttpServletRequest request, 
+			HttpServletResponse response) throws ServletException, IOException {
+		metadata = new MetadataGenerator().generateMetadata();
 		// Set response content type
 		response.setContentType("text/xml");
 		// Actual logic goes here.
