@@ -10,7 +10,7 @@ More on OpenSAML: https://wiki.shibboleth.net/confluence/display/OpenSAML/Home
 
 ### What is this repository for? ###
 
-This repo contains implementation of Service Provider (SP) entity, where it protects the resource for which SAML authentication required to access the resource.
+This repo contains implementation of Service Provider (SP) entity, where it protects the resource for which SAML authentication at Identity Provider (IdP) required to access the resource.
 
 Following SAML Bindings and their combinations supports:
  - Request Binding: Redirect and POST
