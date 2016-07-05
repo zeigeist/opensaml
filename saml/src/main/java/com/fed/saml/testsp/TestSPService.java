@@ -25,6 +25,7 @@ public class TestSPService extends HttpServlet {
     	
         resp.setContentType("text/html");
         resp.getWriter().append("<h1>*** SAML Authentication Successful ***</h1>");
-        resp.getWriter().append("Hi <b>" + userId + "</b>, You are authenticated by SAML IdP and now at the requested resource at SP.");
+        resp.getWriter().append("Hi <b>" + userId + "</b>, "
+        		+ "You are authenticated by SAML IdP and now at the requested resource at SP.");
     }
 }

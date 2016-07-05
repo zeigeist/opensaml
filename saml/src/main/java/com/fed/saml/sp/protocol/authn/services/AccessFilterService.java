@@ -51,10 +51,6 @@ public class AccessFilterService implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest)request;
         HttpServletResponse httpServletResponse = (HttpServletResponse)response;
         logger.info("In doFilter() of AccessFilterService");
-        // get the saved cookie from file
-        // get the cookie from request
-        // if AUTHENTICATED_SESSION_ATTRIBUTE present in request cookie, check with existing saved cookie from file
-        // if value same, redirect to protected resource, else do SAML flow with IdP
        
         if (httpServletRequest.getSession().getAttribute(Constants.AUTHENTICATED_SESSION_ATTRIBUTE) != null) {
         	logger.info("SAML User Authentication is done");

@@ -2,9 +2,13 @@ package com.fed.saml.sp.protocol.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,4 +57,16 @@ public class SAMLUtil {
 		}
     	return ssoConfigMap;
     }
+	
+	public static final String getRandomNumber() {
+		Random random = new Random(); 		
+		return Integer.toString(random.nextInt(1000));
+	}
+	
+	public static final String getValidUntilDate() { 
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");			
+		Calendar calendar = new GregorianCalendar();	
+		calendar.add(Calendar.YEAR, 10);
+		return sdf.format(calendar.getTime()).toString();
+	}
 }

@@ -135,7 +135,6 @@ public class SAMLAssertion {
 	private void logAuthenticationInstant(Assertion assertion) {
         if (assertion != null && assertion.getAuthnStatements() != null) {
         	logger.info("Authentication instant: " + assertion.getAuthnStatements().get(0).getAuthnInstant());
-        	//sessionIndex = assertion.getAuthnStatements().get(0).getSessionIndex();
         }
     }
 

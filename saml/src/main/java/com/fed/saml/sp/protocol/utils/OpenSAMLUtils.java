@@ -98,15 +98,8 @@ public class OpenSAMLUtils {
     }
     
     public static String getSAML2ArtifactType0004(String endpointIndex, String sourceId, String msgHandle) {
-
-        // generate SAML artifact from 3 components and persist it 
-        // 3 components: TypeCode, EndpointIndex of artifact resolution endpoint of issuer - "idpArtResolutionIndx"
-        // and RemainingArtifact: SourceId = SHA-1 hash of the issuer's entityID - "http://local/samlidp"
-        //                        MessageHandle = random bytes sequence that references a SAML message that the artifact issuer is willing to produce on-demand
-//        byte[] endpointIndex = "12".getBytes();
-//        byte[] sourceId = "http://local/samlidp".getBytes();
-//        byte[] msgHandle = "samlMessageHandleRef".getBytes();
-        SAML2ArtifactType0004 samlArtifact = new SAML2ArtifactType0004(endpointIndex.getBytes(), sourceId.getBytes(), msgHandle.getBytes());
+        SAML2ArtifactType0004 samlArtifact = 
+        		new SAML2ArtifactType0004(endpointIndex.getBytes(), sourceId.getBytes(), msgHandle.getBytes());
         return samlArtifact.toString();
     }
     

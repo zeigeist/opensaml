@@ -137,23 +137,6 @@ public class SAMLAuthnRequest {
 
         return authnRequest;
     }
-    
-    /**
-     * Build RequestedAuthnContext using Password Authn Context and Minimum comparison type.
-     * @return
-     */
-    /*private RequestedAuthnContext buildRequestedAuthnContext() {
-        AuthnContextClassRef passwordAuthnContextClassRef = OpenSAMLUtils.buildSAMLObject(AuthnContextClassRef.class);
-        passwordAuthnContextClassRef.setAuthnContextClassRef(AuthnContext.PASSWORD_AUTHN_CTX);
-
-        RequestedAuthnContext requestedAuthnContext = OpenSAMLUtils.buildSAMLObject(RequestedAuthnContext.class);
-        requestedAuthnContext.setComparison(AuthnContextComparisonTypeEnumeration.MINIMUM);
-
-        requestedAuthnContext.getAuthnContextClassRefs().add(passwordAuthnContextClassRef);
-
-        return requestedAuthnContext;
-
-    }*/
 
     /**
      * NameID supported are unspecified, emailAddrrss, transient, persistent.
@@ -191,10 +174,6 @@ public class SAMLAuthnRequest {
     }
 
     private String getSPIssuerValue() {
-        return SAMLUtil.getConfigProperties().get(Constants.PROP_SP_ENTITY_ID);
-    }
-
-    private String getSPNameQualifier() {
         return SAMLUtil.getConfigProperties().get(Constants.PROP_SP_ENTITY_ID);
     }
 

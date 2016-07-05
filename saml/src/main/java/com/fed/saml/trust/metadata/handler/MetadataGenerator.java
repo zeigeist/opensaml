@@ -13,7 +13,6 @@ import javax.xml.bind.Marshaller;
 import com.fed.saml.sp.protocol.utils.Constants;
 import com.fed.saml.sp.protocol.utils.CryptoUtil;
 import com.fed.saml.sp.protocol.utils.SAMLUtil;
-import com.fed.saml.trust.metadata.MetadataUtils;
 import com.fed.saml.trust.metadata.objects.AssertionConsumerService;
 import com.fed.saml.trust.metadata.objects.EncryptionMethod;
 import com.fed.saml.trust.metadata.objects.EntityDescriptor;
@@ -114,9 +113,9 @@ public class MetadataGenerator {
     		 spSSODescriptor.setAssertionConsumerService(assertionConsumerServicePost);
 
     		 EntityDescriptor entityDescriptor = new EntityDescriptor();
-    		 entityDescriptor.setID(MetadataUtils.getRandomNumber());
+    		 entityDescriptor.setID(SAMLUtil.getRandomNumber());
     		 entityDescriptor.setEntityID(SAMLUtil.getConfigProperties().get(Constants.PROP_SP_ENTITY_ID));
-    		 entityDescriptor.setValidUntil(MetadataUtils.getValidUntilDate());
+    		 entityDescriptor.setValidUntil(SAMLUtil.getValidUntilDate());
     		 entityDescriptor.setSPSSODescriptor(spSSODescriptor);
 
     		 JAXBContext jaxbContext;
